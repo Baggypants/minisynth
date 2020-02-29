@@ -2,7 +2,7 @@
 // math.cpp
 //
 // MiniSynth Pi - A virtual analogue synthesizer for Raspberry Pi
-// Copyright (C) 2017  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2017-2020  R. Stange <rsta2@o2online.de>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -26,7 +26,11 @@ float fabsf (float x)
 	return x >= 0.0 ? x : -x;
 #else
 	float y;
+#if AARCH == 32
 	asm volatile ("fabss %0, %1" : "=w" (y) : "w" (x));
+#else
+	asm volatile ("fabs %s0, %s1" : "=w" (y) : "w" (x));
+#endif
 
 	return y;
 #endif
@@ -49,7 +53,11 @@ float sqrtf (float x)
 	}
 #else
 	float y;
+#if AARCH == 32
 	asm volatile ("fsqrts %0, %1" : "=w" (y) : "w" (x));
+#else
+	asm volatile ("fsqrt %s0, %s1" : "=w" (y) : "w" (x));
+#endif
 #endif
 
 	return y;
